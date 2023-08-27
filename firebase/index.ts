@@ -1,5 +1,5 @@
 import admin from "firebase-admin";
-import * as serviceAccount from "../crm-api-dc34e-firebase-adminsdk-9zx5y-ef56f0b299.json";
+import * as serviceAccount from "../onefam-98353-firebase-adminsdk-txzh6-d05e9f27d0.json";
 // import google from 'google-auth-library'
 
 const params = {

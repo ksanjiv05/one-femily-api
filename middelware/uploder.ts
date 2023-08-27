@@ -5,7 +5,7 @@ import { v4 } from "uuid";
 
 const storage = multer.diskStorage({
   destination: function (req: Request, file, cb) {
-    // console.log("dirname", req);
+    console.log("dirname", req.body);
     mkdirp.sync(globalThis.__dirname + "/uploads/images");
     cb(null, globalThis.__dirname + "/uploads/images");
   },

@@ -7,6 +7,7 @@ import People from "../../models/People";
 
 export const addPeople = async (req: Request, res: Response) => {
   try {
+    console.log("req.body", req.body)
     const {
       name = "", // bm
       fatherName = "", //bm
@@ -16,6 +17,7 @@ export const addPeople = async (req: Request, res: Response) => {
       gender = "", //bm
       dob = "", //bm
 
+      city = "", //bm
       nativePlace = "", //bm
       currentPlace = "",
       occupation = "",
@@ -33,7 +35,8 @@ export const addPeople = async (req: Request, res: Response) => {
       nativePlace == "" ||
       occupation == "" ||
       maritalStatus == "" ||
-      gender == ""
+      gender == ""||
+      city == ""
     ) {
       return responseObj({
         statusCode: HTTP_RESPONSE.BED_REQUEST,

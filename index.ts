@@ -12,6 +12,7 @@ import { startListening } from "./socket_init";
 import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { createSuperAdmin } from "./scripts/createSuperAdmin";
 import { csvParser } from "./helper/utils";
+import { getTree } from "./controllers/relationController/relation";
 
 dotenv.config();
 

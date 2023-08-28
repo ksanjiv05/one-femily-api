@@ -27,9 +27,13 @@ const PeopleSchema: Schema = new Schema({
     required: true,
   },
   dob: {
-    type: Number,
+    type: String,
   },
 
+  city:{
+    type: String,
+    required: true,
+  },
   nativePlace: {
     type: String,
     required: true,

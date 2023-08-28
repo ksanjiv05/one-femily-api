@@ -6,14 +6,14 @@ import { isAuthorized } from "./authorization_check";
 export const auth = (req: Request, res: Response, next: NextFunction) => {
   try {
     const token: string | undefined = req.header("authorization");
-    // console.log("token ", token);
+    console.log("token ", token);
     if (!token)
       return res.status(403).json({ msg: "please provide valid auth token " });
     adminApp
       .auth()
       .verifyIdToken(token)
       .then((claims: any) => {
-        // console.log("clams  ", claims);
+        console.log("clams  ", claims);
 
         const request_uri = req.path;
         const request_method = req.method;

@@ -10,6 +10,7 @@ export interface IPeople extends Document {
   gender?: string; //bm
   dob: string; //bm
 
+  city:string; //bm
   nativePlace: string; //bm
   currentPlace: string;
   occupation: string;
@@ -26,3 +27,4 @@ export interface IPeople extends Document {
   
   createdAt?: string;
 }
+

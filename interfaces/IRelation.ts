@@ -11,6 +11,12 @@ type RelationHierarchyProps={
 
 export interface IRelation extends Document {
     uid: string;
-    mongoUid:string;
-    relationHierarchy : RelationHierarchyProps[]
+    // relationUid:string;
+    level?:number;
+    parentId:string; // parent id of this relation 
+    parentLevel?:number;
+    relationType:string; // like mom dad son etc
+    relationName:string;
+    relationUid:string; // which people you add
+    profilePicture:string;
 }

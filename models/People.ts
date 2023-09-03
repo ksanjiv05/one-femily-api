@@ -72,7 +72,7 @@ const PeopleSchema: Schema = new Schema({
     default: Date.now,
   },
 });
-
+// PeopleSchema.clearIndexes({ })
 PeopleSchema.post<IPeople>("save", function () {
   logging.info("Mongo", "New People just saved: ");
 });

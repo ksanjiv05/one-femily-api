@@ -210,3 +210,13 @@ const user = {
   });
 
   console.log("rl",JSON.stringify(rl));
+
+  const getTree =async (data, root) => {
+  const temp = Object.create(null);
+     return data.filter((value,i, arr) => {
+      const { relationUid, parentId } = value;
+      temp[relationUid] = value;
+      if(parentId == null) return true;
+      (temp[parentId].children || (temp[parentId].children = [])).push(value);
+    });
+  }

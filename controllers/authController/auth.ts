@@ -11,7 +11,8 @@ import { HOST } from "../../config/config";
 
 export const addUser = async (req: Request, res: Response) => {
   try {
-    req.body.photoURL = HOST + req.file?.filename;
+    req.body.photoURL = "http://localhost:3000/static/"+req.file?.filename;
+    console.log("file ",req.body, req.file)
     const {
       displayName = "",
       fatherName = "",
@@ -19,10 +20,17 @@ export const addUser = async (req: Request, res: Response) => {
       email = "", //userEmail
       photoURL = "",
       phoneNumber = "", //userMobile
-      password=""
+      password = "",
     }: IUser = req.body;
 
-    if (displayName == "" ||fatherName==""|| email == ""||photoURL=="" ||phoneNumber==""|| password == "") {
+    if (
+      displayName == "" ||
+      fatherName == "" ||
+      email == "" ||
+      photoURL == "" ||
+      phoneNumber == "" ||
+      password == ""
+    ) {
       return responseObj({
         statusCode: HTTP_RESPONSE.BED_REQUEST,
         type: "error",
@@ -68,6 +76,94 @@ export const addUser = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     logging.error("Add User", "unable to add user", error);
+    if (error?.message)
+      return responseObj({
+        statusCode: HTTP_RESPONSE.BED_REQUEST,
+        type: "error",
+        msg: error?.message,
+        error: null,
+        resObj: res,
+        data: null,
+      });
+    return responseObj({
+      statusCode: HTTP_RESPONSE.INTERNAL_SERVER_ERROR,
+      type: "error",
+      msg: error?.message || "unable to process your request",
+      error: null,
+      resObj: res,
+      data: null,
+    });
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    req.body.photoURL = "http://localhost:3000/static/"+req.file?.filename;
+    console.log("req. body ",req.body)
+    const {uid} = req.body;
+    const {
+      displayName = "",
+      fatherName = "",
+      motherName = "",
+      email = "", //userEmail
+      photoURL = "",
+      phoneNumber = "", //userMobile
+      password = "",
+    }: IUser = req.body;
+
+    if (
+      displayName == "" ||
+      fatherName == "" ||
+      email == "" ||
+      photoURL == "" ||
+      phoneNumber == "" ||
+      password == ""
+    ) {
+      return responseObj({
+        statusCode: HTTP_RESPONSE.BED_REQUEST,
+        type: "error",
+        msg: "please provide email, name, father name,phoneNumber and password",
+        error: null,
+        resObj: res,
+        data: null,
+      });
+    }
+
+    const newUserRecord = await getAuth(adminApp).updateUser(uid, {
+      email,
+      emailVerified: false,
+      phoneNumber,
+      password,
+      displayName,
+      photoURL,
+    })
+    const isAdded = await addUserToMongoDB({
+      ...req.body,
+      uid,
+    });
+
+    if (!isAdded) {
+      await deleteUserFromFirebase(newUserRecord.uid);
+      return responseObj({
+        statusCode: HTTP_RESPONSE.ACCEPTED,
+        type: "error",
+        msg: "unable to update user to MongoDB",
+        error: null,
+        resObj: res,
+        data: null,
+      });
+    }
+
+    return responseObj({
+      statusCode: HTTP_RESPONSE.SUCCESS,
+      type: "success",
+      msg: "user updated successfully ",
+      error: null,
+      resObj: res,
+      data: newUserRecord,
+    });
+  } catch (error: any) {
+    logging.error("Update User", "unable to uodate user", error);
     if (error?.message)
       return responseObj({
         statusCode: HTTP_RESPONSE.BED_REQUEST,
@@ -166,17 +262,18 @@ export const getUsers = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
   try {
-    const { id = "" } = req.params;
-    if (id == "")
-      return responseObj({
-        statusCode: HTTP_RESPONSE.BED_REQUEST,
-        type: "error",
-        msg: "please provide a valid Course ID",
-        error: null,
-        resObj: res,
-        data: null,
-      });
-    const user = await User.findOne({ uid: id });
+    // const { id = "" } = req.params;
+    // if (id == "")
+    //   return responseObj({
+    //     statusCode: HTTP_RESPONSE.BED_REQUEST,
+    //     type: "error",
+    //     msg: "please provide a valid Course ID",
+    //     error: null,
+    //     resObj: res,
+    //     data: null,
+    //   });
+    const { uid } = req.body.user;
+    const user = await User.findOne({ uid });
     return responseObj({
       statusCode: HTTP_RESPONSE.SUCCESS,
       type: "success",
@@ -213,25 +310,12 @@ export const getUser = async (req: Request, res: Response) => {
 // to add user to mongo database
 export const addUserToMongoDB = async (data: IUser) => {
   try {
-    const {
-      uid,
-      displayName,
-      email,
-      emailVerified = false,
-      photoURL,
-      password,
-      phoneNumber,
-    }: IUser = data;
+    const { uid }: IUser = data;
 
     await User.updateOne(
       { uid },
       {
-        email,
-        emailVerified,
-        phoneNumber,
-        photoURL,
-        uid,
-        displayName,
+        ...data,
       },
       { upsert: true }
     );

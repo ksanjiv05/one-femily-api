@@ -18,13 +18,13 @@ const UserSchema: Schema = new Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   }, //userEmail
   photoURL: {
     type: String,
     required: true,
   },
 
-  
   phoneNumber: {
     type: String,
     required: true,
@@ -33,6 +33,7 @@ const UserSchema: Schema = new Schema({
   uid: {
     type: String,
     required: true,
+    unique: true,
   },
   fcmToken: {
     type: String,

@@ -13,6 +13,7 @@ import { DefaultEventsMap } from "socket.io/dist/typed-events";
 import { createSuperAdmin } from "./scripts/createSuperAdmin";
 import { csvParser } from "./helper/utils";
 import { getTree } from "./controllers/relationController/relation";
+import { searchPeople } from "./helper/search_people";
 
 dotenv.config();
 
@@ -61,3 +62,13 @@ server.listen(port, () => {
 export default io;
 
 // createSuperAdmin();
+
+const runTest = async () => {
+  const pp = await searchPeople({
+    name: "Dhanashree",
+    fatherName:"Balkrishna"
+  });
+  console.log("users ", pp);
+};
+
+runTest();

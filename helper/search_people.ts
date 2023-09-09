@@ -1,4 +1,6 @@
 import User from "../models/User";
+import { sendNotification } from "./fcm";
+import { notify } from "./notify";
 
 // displayName: string;
 //   fatherName:string;
@@ -21,6 +23,23 @@ import User from "../models/User";
 //   ugCollage: string;
 //   pgCollage: string;
 
+type searchPeopleType = {
+  fatherName: string;
+  motherName: string;
+  motherMiddleName: string;
+  nativePlace: string;
+  dob: string;
+  bloodGroup: string;
+  name: string;
+  gender: string;
+  occupation: string;
+  email: string;
+  pic: string;
+  uid: string;
+  muid: string;
+  fcmToken: string;
+};
+
 export const searchPeople = async ({
   // people properties
   fatherName,
@@ -29,117 +48,20 @@ export const searchPeople = async ({
   bloodGroup,
   name,
   gender,
-  currentPlace,
   occupation,
   email,
-}) => {
-  //   const usersA = await User.find({
-  //     $and: [
-  //       {
-  //         displayName: name,
-  //       },
-  //       {
-  //         fatherName,
-  //       },
-  //       {
-  //         motherName,
-  //       },
-  //       {
-  //         gender,
-  //       },
-  //       {
-  //         nativePlace,
-  //       },
-  //       {
-  //         currentPlace,
-  //       },
-  //       {
-  //         occupation,
-  //       },
-  //     ],
-  //   });
-
-  //   const usersB = await User.find({
-  //     $and: [
-  //       {
-  //         displayName: name,
-  //       },
-  //       {
-  //         fatherName,
-  //       },
-  //       {
-  //         motherName,
-  //       },
-  //       {
-  //         gender,
-  //       },
-  //       {
-  //         nativePlace,
-  //       },
-  //       {
-  //         currentPlace,
-  //       },
-  //     ],
-  //   });
-
-  //   const usersC = await User.find({
-  //     $and: [
-  //       {
-  //         displayName: name,
-  //       },
-  //       {
-  //         fatherName,
-  //       },
-  //       {
-  //         motherName,
-  //       },
-  //       {
-  //         gender,
-  //       },
-  //       {
-  //         nativePlace,
-  //       },
-  //     ],
-  //   });
-
-  //   const usersD = await User.find({
-  //     $and: [
-  //       {
-  //         displayName: name,
-  //       },
-  //       {
-  //         fatherName,
-  //       },
-  //       {
-  //         motherName,
-  //       },
-  //       {
-  //         gender,
-  //       },
-  //     ],
-  //   });
-
-  //   const usersE = await User.find({
-  //     $and: [
-  //       {
-  //         displayName: name,
-  //       },
-  //       {
-  //         fatherName,
-  //       },
-  //       {
-  //         motherName,
-  //       },
-  //     ],
-  //   });
-
+  pic,
+  uid,
+  muid,
+  fcmToken,
+}: searchPeopleType) => {
   const usersF = await User.find({
     $or: [
       {
         $and: [
-          {
-            displayName: name,
-          },
+          // {
+          //   displayName: { $ne: name },
+          // },
           {
             fatherName,
           },
@@ -153,7 +75,29 @@ export const searchPeople = async ({
             nativePlace,
           },
           {
-            currentPlace,
+            occupation,
+          },
+          {
+            bloodGroup,
+          },
+        ],
+      },
+      {
+        $and: [
+          // {
+          //   displayName: { $ne: name },
+          // },
+          {
+            fatherName,
+          },
+          {
+            motherName,
+          },
+          {
+            gender,
+          },
+          {
+            nativePlace,
           },
           {
             occupation,
@@ -162,31 +106,9 @@ export const searchPeople = async ({
       },
       {
         $and: [
-          {
-            displayName: name,
-          },
-          {
-            fatherName,
-          },
-          {
-            motherName,
-          },
-          {
-            gender,
-          },
-          {
-            nativePlace,
-          },
-          {
-            currentPlace,
-          },
-        ],
-      },
-      {
-        $and: [
-          {
-            displayName: name,
-          },
+          // {
+          //   displayName: { $ne: name },
+          // },
           {
             fatherName,
           },
@@ -203,9 +125,9 @@ export const searchPeople = async ({
       },
       {
         $and: [
-          {
-            displayName: name,
-          },
+          // {
+          //   displayName: { $ne: name },
+          // },
           {
             fatherName,
           },
@@ -219,9 +141,9 @@ export const searchPeople = async ({
       },
       {
         $and: [
-          {
-            displayName: name,
-          },
+          // {
+          //   displayName: { $ne: name },
+          // },
           {
             fatherName,
           },
@@ -232,26 +154,179 @@ export const searchPeople = async ({
       },
       {
         $and: [
-          {
-            displayName: name,
-          },
+          // {
+          //   displayName: { $ne: name },
+          // },
           {
             fatherName,
+          },
+          {
+            gender,
           },
         ],
       },
       {
         $and: [
-          {
-            displayName: name,
-          },
+          // {
+          //   displayName: { $ne: name },
+          // },
           {
             motherName,
+          },
+          {
+            gender,
           },
         ],
       },
     ],
   });
 
-  return usersF;
+  // console.log("usersF", usersF);
+
+  const fcmTokens = usersF
+    .map((user) => user.fcmToken)
+    .filter((token) => token != fcmToken);
+  sendNotification({
+    title: "Do you know?",
+    message: "Name : " + name,
+    tokens: fcmTokens,
+    payload: {
+      uid,
+      pic: "https://picsum.photos/50",
+    },
+    icon: "",
+  });
+  const userIds = usersF.map((user) => user.uid).filter((uidn) => uidn != uid);
+
+  notify({
+    users_ids: userIds,
+    name,
+    fatherName,
+    motherName,
+    pic,
+    uid,
+    muid,
+  });
+
+  // return usersF;
 };
+
+// const usersF = await User.find({
+//   $or: [
+//     {
+//       $and: [
+//         {
+//           displayName: name,
+//         },
+//         {
+//           fatherName,
+//         },
+//         {
+//           motherName,
+//         },
+//         {
+//           gender,
+//         },
+//         {
+//           nativePlace,
+//         },
+//         {
+//           occupation,
+//         },
+//         {
+//           bloodGroup,
+//         },
+//       ],
+//     },
+//     {
+//       $and: [
+//         {
+//           displayName: name,
+//         },
+//         {
+//           fatherName,
+//         },
+//         {
+//           motherName,
+//         },
+//         {
+//           gender,
+//         },
+//         {
+//           nativePlace,
+//         },
+//         {
+//           occupation,
+//         },
+//       ],
+//     },
+//     {
+//       $and: [
+//         {
+//           displayName: name,
+//         },
+//         {
+//           fatherName,
+//         },
+//         {
+//           motherName,
+//         },
+//         {
+//           gender,
+//         },
+//         {
+//           nativePlace,
+//         },
+//       ],
+//     },
+//     {
+//       $and: [
+//         {
+//           displayName: name,
+//         },
+//         {
+//           fatherName,
+//         },
+//         {
+//           motherName,
+//         },
+//         {
+//           gender,
+//         },
+//       ],
+//     },
+//     {
+//       $and: [
+//         {
+//           displayName: name,
+//         },
+//         {
+//           fatherName,
+//         },
+//         {
+//           motherName,
+//         },
+//       ],
+//     },
+//     {
+//       $and: [
+//         {
+//           displayName: name,
+//         },
+//         {
+//           fatherName,
+//         },
+//       ],
+//     },
+//     {
+//       $and: [
+//         {
+//           displayName: name,
+//         },
+//         {
+//           motherName,
+//         },
+//       ],
+//     },
+//   ],
+// });

@@ -1,7 +1,0 @@
-export enum USER_ROLES {
-  DEFAULT = 0,
-  EMOPLOYER,
-  CONTRACTOR,
-  SUPER_ADMIN,
-  EMPLOYEE,
-}

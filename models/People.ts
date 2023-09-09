@@ -22,6 +22,8 @@ const PeopleSchema: Schema = new Schema({
     type: String,
     required: true,
   },
+  state: String, //----
+  lastName: String, //----
   gender: {
     type: String,
     required: true,
@@ -30,7 +32,7 @@ const PeopleSchema: Schema = new Schema({
     type: String,
   },
 
-  city:{
+  city: {
     type: String,
     required: true,
   },

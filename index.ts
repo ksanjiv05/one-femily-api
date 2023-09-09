@@ -14,6 +14,7 @@ import { createSuperAdmin } from "./scripts/createSuperAdmin";
 import { csvParser } from "./helper/utils";
 import { getTree } from "./controllers/relationController/relation";
 import { searchPeople } from "./helper/search_people";
+import { sendNotification } from "./helper/fcm";
 
 dotenv.config();
 
@@ -64,11 +65,33 @@ export default io;
 // createSuperAdmin();
 
 const runTest = async () => {
-  const pp = await searchPeople({
-    name: "Dhanashree",
-    fatherName:"Balkrishna"
-  });
-  console.log("users ", pp);
+  // const pp = await searchPeople({
+  //   name: "Dhanashree",
+  //   fatherName:"Balkrishna"
+  // });
+  // console.log("users ", pp);
+  // await sendNotification({
+  //   title: "test title 2",
+  //   message: "test message 2",
+  //   icon: "",
+  //   tokens: [
+  //     "d1QbG1swQRqaZVrArv6WGm:APA91bGmHgT7K5y69sTnj_hNqMunkTlUrhNy7BURbDYIfa1ICliXlQXmm1TX1ku9-uA6yI7Yq6OJWl_eHqhYH09FkpxdzR7BEynIpEh46YrzGF8e3XJPADnY1d5kvTw3hM-24drdcWzl",
+  //   ],
+  // });
+  // searchPeople({
+  //   name: "kishan",
+  //   fatherName: "laxman",
+  //   motherName: "fhul",
+  //   motherMiddleName: "kumaric",
+  //   email: "kishan@gmail.com",
+  //   pic: "http://localhost:3000/static/undefined",
+  //   gender: "m",
+  //   dob: "",
+  //   nativePlace: "barhait",
+  //   occupation: "farmerc",
+  //   bloodGroup: "A+",
+  //   uid: "oOnhvNWw6aR82nQ5mr2EsrOIz0I3",
+  // });
 };
 
 runTest();

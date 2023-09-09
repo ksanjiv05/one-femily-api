@@ -64,7 +64,9 @@ export const addNotification = async (req: Request, res: Response) => {
 export const getNotifications = async (req: Request, res: Response) => {
   try {
     const { uid } = req.body.user;
-    const notifications = await Notification.find({ uid });
+    const notifications = await Notification.find({
+      users_ids: { $elemMatch: { $eq: uid } },
+    });
     return responseObj({
       statusCode: HTTP_RESPONSE.SUCCESS,
       type: "success",

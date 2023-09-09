@@ -2,14 +2,14 @@ import { Document } from "mongoose";
 
 export interface IUser extends Document {
   displayName: string;
-  fatherName:string;
-  motherName:string;
+  fatherName: string;
+  motherName: string;
   email: string; //userEmail
   photoURL?: string;
   gender?: string;
   phoneNumber?: string; //userMobile
   userDob: string;
-  
+
   uid?: string;
   fcmToken?: string;
   emailVerified?: boolean;
@@ -22,9 +22,10 @@ export interface IUser extends Document {
   ugCollage: string;
   pgCollage: string;
 
-
   totalConnections: number;
   isProfilePicBlured: boolean;
   createdAt?: string;
-}
 
+  motherMiddleName: string; //----
+  state: string; //----
+}

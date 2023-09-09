@@ -8,11 +8,12 @@ import { responseObj } from "../../helper/response";
 import { HTTP_RESPONSE } from "../../helper/constants";
 import { USER_ROLES } from "../../config/enums";
 import { HOST } from "../../config/config";
+import { searchPeople } from "../../helper/search_people";
 
 export const addUser = async (req: Request, res: Response) => {
   try {
-    req.body.photoURL = "http://localhost:3000/static/"+req.file?.filename;
-    console.log("file ",req.body, req.file)
+    req.body.photoURL = "http://localhost:3000/static/" + req.file?.filename;
+    console.log("file ", req.body, req.file);
     const {
       displayName = "",
       fatherName = "",
@@ -49,12 +50,19 @@ export const addUser = async (req: Request, res: Response) => {
       displayName,
       photoURL,
     });
-    const isAdded = await addUserToMongoDB({
+    // const isAdded = await addUserToMongoDB({
+    //   ...req.body,
+    //   uid: newUserRecord.uid,
+    // });
+
+    const newUser = new User({
       ...req.body,
       uid: newUserRecord.uid,
     });
 
-    if (!isAdded) {
+    await newUser.save();
+
+    if (!newUser) {
       await deleteUserFromFirebase(newUserRecord.uid);
       return responseObj({
         statusCode: HTTP_RESPONSE.ACCEPTED,
@@ -65,7 +73,12 @@ export const addUser = async (req: Request, res: Response) => {
         data: null,
       });
     }
+    req.body.uid = newUserRecord.uid;
+    req.body.pic = req.body.photoURL;
+    req.body.name = req.body.displayName;
+    req.body.muid = newUser._id;
 
+    searchPeople(req.body);
     return responseObj({
       statusCode: HTTP_RESPONSE.SUCCESS,
       type: "success",
@@ -76,6 +89,27 @@ export const addUser = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     logging.error("Add User", "unable to add user", error);
+    if (error?.code == "auth/email-already-exists") {
+      return responseObj({
+        statusCode: 203,
+        type: "error",
+        msg: "Email already exists",
+        error: null,
+        resObj: res,
+        data: null,
+      });
+    }
+    if (error?.code == "auth/phone-number-already-exists") {
+      return responseObj({
+        statusCode: 202,
+        type: "error",
+        msg: "Phone number already exists",
+        error: null,
+        resObj: res,
+        data: null,
+      });
+    }
+
     if (error?.message)
       return responseObj({
         statusCode: HTTP_RESPONSE.BED_REQUEST,
@@ -96,11 +130,99 @@ export const addUser = async (req: Request, res: Response) => {
   }
 };
 
+// export const addUser = async (req: Request, res: Response) => {
+//   try {
+//     req.body.photoURL = "http://localhost:3000/static/" + req.file?.filename;
+//     console.log("file ", req.body, req.file);
+//     const { uid } = req.body;
+//     const {
+//       displayName = "",
+//       fatherName = "",
+//       motherName = "",
+//       email = "", //userEmail
+//       photoURL = "",
+//       phoneNumber = "", //userMobile
+//       password = "",
+//     }: IUser = req.body;
+
+//     if (
+//       displayName == "" ||
+//       fatherName == "" ||
+//       email == "" ||
+//       photoURL == "" ||
+//       phoneNumber == "" ||
+//       password == ""
+//     ) {
+//       return responseObj({
+//         statusCode: HTTP_RESPONSE.BED_REQUEST,
+//         type: "error",
+//         msg: "please provide email, name, father name,phoneNumber and password",
+//         error: null,
+//         resObj: res,
+//         data: null,
+//       });
+//     }
+
+//     // const newUserRecord = await getAuth(adminApp).createUser({
+//     //   email,
+//     //   emailVerified: false,
+//     //   phoneNumber,
+//     //   password,
+//     //   displayName,
+//     //   photoURL,
+//     // });
+//     const isAdded = await addUserToMongoDB({
+//       ...req.body,
+//       uid: uid,
+//     });
+
+//     if (!isAdded) {
+//       await deleteUserFromFirebase(uid);
+//       return responseObj({
+//         statusCode: HTTP_RESPONSE.ACCEPTED,
+//         type: "error",
+//         msg: "unable to add user to MongoDB",
+//         error: null,
+//         resObj: res,
+//         data: null,
+//       });
+//     }
+
+//     return responseObj({
+//       statusCode: HTTP_RESPONSE.SUCCESS,
+//       type: "success",
+//       msg: "user added successfully ",
+//       error: null,
+//       resObj: res,
+//       data: {},
+//     });
+//   } catch (error: any) {
+//     logging.error("Add User", "unable to add user", error);
+//     if (error?.message)
+//       return responseObj({
+//         statusCode: HTTP_RESPONSE.BED_REQUEST,
+//         type: "error",
+//         msg: error?.message,
+//         error: null,
+//         resObj: res,
+//         data: null,
+//       });
+//     return responseObj({
+//       statusCode: HTTP_RESPONSE.INTERNAL_SERVER_ERROR,
+//       type: "error",
+//       msg: error?.message || "unable to process your request",
+//       error: null,
+//       resObj: res,
+//       data: null,
+//     });
+//   }
+// };
+
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    req.body.photoURL = "http://localhost:3000/static/"+req.file?.filename;
-    console.log("req. body ",req.body)
-    const {uid} = req.body;
+    req.body.photoURL = "http://localhost:3000/static/" + req.file?.filename;
+    console.log("req. body ", req.body);
+    const { uid } = req.body;
     const {
       displayName = "",
       fatherName = "",
@@ -136,7 +258,7 @@ export const updateUser = async (req: Request, res: Response) => {
       password,
       displayName,
       photoURL,
-    })
+    });
     const isAdded = await addUserToMongoDB({
       ...req.body,
       uid,
@@ -164,6 +286,52 @@ export const updateUser = async (req: Request, res: Response) => {
     });
   } catch (error: any) {
     logging.error("Update User", "unable to uodate user", error);
+    if (error?.message)
+      return responseObj({
+        statusCode: HTTP_RESPONSE.BED_REQUEST,
+        type: "error",
+        msg: error?.message,
+        error: null,
+        resObj: res,
+        data: null,
+      });
+    return responseObj({
+      statusCode: HTTP_RESPONSE.INTERNAL_SERVER_ERROR,
+      type: "error",
+      msg: error?.message || "unable to process your request",
+      error: null,
+      resObj: res,
+      data: null,
+    });
+  }
+};
+
+export const updateUserOptionalDetails = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    console.log("req. body ", req.body);
+    const { uid } = req.body;
+
+    const isAdded = await addUserToMongoDB({
+      ...req.body,
+      uid,
+    });
+
+    return responseObj({
+      statusCode: HTTP_RESPONSE.SUCCESS,
+      type: "success",
+      msg: "user updated successfully ",
+      error: null,
+      resObj: res,
+      data: {
+        ...req.body,
+        uid,
+      },
+    });
+  } catch (error: any) {
+    logging.error("Update Other User Details", "unable to uodate user", error);
     if (error?.message)
       return responseObj({
         statusCode: HTTP_RESPONSE.BED_REQUEST,
@@ -338,4 +506,62 @@ export const revokeToken = (uid: string) => {
     .then((timestamp) => {
       console.log(`Tokens revoked at: ${timestamp}`);
     });
+};
+
+export const saveFcmToken = async (req: Request, res: Response) => {
+  try {
+    req.body.photoURL = "http://localhost:3000/static/" + req.file?.filename;
+    console.log("req. body ", req.body);
+    const { uid } = req.body.user;
+
+    if (req.body.fcmTokem == "") {
+      return responseObj({
+        statusCode: HTTP_RESPONSE.BED_REQUEST,
+        type: "error",
+        msg: "please provide fcm token",
+        error: null,
+        resObj: res,
+        data: null,
+      });
+    }
+
+    await User.updateOne(
+      {
+        uid,
+      },
+      {
+        $set: {
+          fcmToken: req.body.fcmToken,
+        },
+      }
+    );
+
+    return responseObj({
+      statusCode: HTTP_RESPONSE.SUCCESS,
+      type: "success",
+      msg: "fcm token updated successfully ",
+      error: null,
+      resObj: res,
+      data: "saved",
+    });
+  } catch (error: any) {
+    logging.error("Fcm Token", "unable to uodate fcm ", error);
+    if (error?.message)
+      return responseObj({
+        statusCode: HTTP_RESPONSE.BED_REQUEST,
+        type: "error",
+        msg: error?.message,
+        error: null,
+        resObj: res,
+        data: null,
+      });
+    return responseObj({
+      statusCode: HTTP_RESPONSE.INTERNAL_SERVER_ERROR,
+      type: "error",
+      msg: error?.message || "unable to process your request",
+      error: null,
+      resObj: res,
+      data: null,
+    });
+  }
 };

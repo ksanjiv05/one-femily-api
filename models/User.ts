@@ -24,10 +24,48 @@ const UserSchema: Schema = new Schema({
     type: String,
     required: true,
   },
-
+  gender: {
+    type: String,
+    required: true,
+  },
+  userDob: {
+    type: String,
+    required: true,
+  },
+  nativePlace: {
+    type: String,
+    required: true,
+  },
+  bloodGroup: {
+    type: String,
+  },
+  addhar: {
+    type: String,
+  },
+  userEducation: {
+    type: String,
+  },
+  school: {
+    type: String,
+  },
+  ugCollage: {
+    type: String,
+  },
+  pgCollage: {
+    type: String,
+  },
+  motherMiddleName: {
+    type: String,
+    required: true,
+  }, //----
+  state: {
+    type: String,
+    required: true,
+  },
   phoneNumber: {
     type: String,
     required: true,
+    unique: true,
   }, //userMobile
 
   uid: {

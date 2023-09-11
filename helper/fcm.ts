@@ -70,7 +70,10 @@ import { adminApp } from "../firebase";
 // picture - metadata about the picture
 //d1QbG1swQRqaZVrArv6WGm:APA91bGmHgT7K5y69sTnj_hNqMunkTlUrhNy7BURbDYIfa1ICliXlQXmm1TX1ku9-uA6yI7Yq6OJWl_eHqhYH09FkpxdzR7BEynIpEh46YrzGF8e3XJPADnY1d5kvTw3hM-24drdcWzl
 export const sendNotification = async (data: any) => {
-  const { uids = [], title, message, tokens, icon = "" } = data;
+  const { uids = [], title, message, tokens = [], icon = "" } = data;
+  if (tokens.length == 0) {
+    return;
+  }
   console.log("call push notification", data);
   await admin
     .messaging(adminApp)

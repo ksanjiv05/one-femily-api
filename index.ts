@@ -81,16 +81,16 @@ const runTest = async () => {
   // searchPeople({
   //   name: "kishan",
   //   fatherName: "laxman",
-  //   motherName: "fhul",
-  //   motherMiddleName: "kumaric",
-  //   email: "kishan@gmail.com",
+  //   motherName: "phool",
+  //   motherMiddleName: "kumari",
+  //   email: "sunayna@gmail.com",
   //   pic: "http://localhost:3000/static/undefined",
   //   gender: "m",
   //   dob: "",
-  //   nativePlace: "barhait",
+  //   nativePlace: "bebye",
   //   occupation: "farmerc",
   //   bloodGroup: "A+",
-  //   uid: "oOnhvNWw6aR82nQ5mr2EsrOIz0I3",
+  //   uid: "nFVzzbrbtLhL1ZLRza4zNwzkmNE3",
   // });
 };
 

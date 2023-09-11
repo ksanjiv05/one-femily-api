@@ -5,6 +5,7 @@ import { responseObj } from "../../helper/response";
 import { IRelation } from "../../interfaces/IRelation";
 import Relation from "../../models/Relation";
 import User from "../../models/User";
+import { deleteNotificationAferAccept } from "../../helper/notify";
 
 type RelationProps = {
   uid: string;
@@ -64,7 +65,9 @@ export const addRelation = async (req: Request, res: Response) => {
 
     const newRelation: IRelation = new Relation({ uid, ...req.body });
     await newRelation.save();
-
+    // console.log("----------------------------------------");
+    // console.log(req.body);
+    deleteNotificationAferAccept(req.body.relationUid, uid);
     // add push notification to notify user
     return responseObj({
       statusCode: HTTP_RESPONSE.SUCCESS,
@@ -250,7 +253,7 @@ export const getRelationsAll = async (req: Request, res: Response) => {
 
 export const getTree = async (data: string) => {
   const temp = Object.create(null);
-  const buildData =JSON.parse(data).filter((value, i, arr) => {
+  const buildData = JSON.parse(data).filter((value, i, arr) => {
     const { relationUid, parentId } = value;
     temp[relationUid] = value;
     if (parentId == null) return true;
@@ -266,3 +269,43 @@ export const getTree = async (data: string) => {
 //https://github.com/SimformSolutionsPvtLtd/react-native-tree-selection/tree/master
 
 //https://github.com/Johncy1997/react-native-family-tree/blob/master/src/FamilyTree.js
+
+// su 64fdace799c6e4e81ae4fc10  nFVzzbrbtLhL1ZLRza4zNwzkmNE3
+
+//jyoti eYSbyNhfdqZEpyXJw44nA7lmIdW2 64fc42089f79c76a4e576641
+
+/**
+ * Paste one or more documents here
+ */
+// {
+//   "uid": "eYSbyNhfdqZEpyXJw44nA7lmIdW2",
+//   "parentId": "64fc42089f79c76a4e576641",
+//   "relationType": "Sister",
+//   "relationName": "sunayna",
+//   "relationUid": "64fdace799c6e4e81ae4fc10",
+//   "createdAt": {
+//     "$date": "2023-09-11T02:32:42.269Z"
+//   },
+//   "__v": 0
+// }
+
+/**
+ * Paste one or more documents here
+ */
+// {
+//   "name": "sunayna",
+//   "fatherName": "laxman",
+//   "motherName": "phool",
+//   "pic": "http://localhost:3000/static/undefined",
+//   "uid": "nFVzzbrbtLhL1ZLRza4zNwzkmNE3",
+//   "muid": "64fdace799c6e4e81ae4fc10",
+//   "users_ids": [
+//     "ttlEKBdQbSQHoj7vFucR2dQ0bSp1",
+//     "LPnYiGFYItamSL2ZFsNeydeLoxH3",
+//     "oOnhvNWw6aR82nQ5mr2EsrOIz0I3"
+//   ],
+//   "createdAt": {
+//     "$date": "2023-09-10T11:47:51.949Z"
+//   },
+//   "__v": 0
+// }

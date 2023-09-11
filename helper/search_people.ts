@@ -1,6 +1,6 @@
 import User from "../models/User";
 import { sendNotification } from "./fcm";
-import { notify } from "./notify";
+import { notify, notifyUpdate } from "./notify";
 
 // displayName: string;
 //   fatherName:string;
@@ -181,7 +181,7 @@ export const searchPeople = async ({
     ],
   });
 
-  // console.log("usersF", usersF);
+  console.log("usersF", usersF);
 
   const fcmTokens = usersF
     .map((user) => user.fcmToken)
@@ -199,6 +199,16 @@ export const searchPeople = async ({
   const userIds = usersF.map((user) => user.uid).filter((uidn) => uidn != uid);
 
   notify({
+    users_ids: userIds,
+    name,
+    fatherName,
+    motherName,
+    pic,
+    uid,
+    muid,
+  });
+
+  notifyUpdate({
     users_ids: userIds,
     name,
     fatherName,

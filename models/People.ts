@@ -34,15 +34,15 @@ const PeopleSchema: Schema = new Schema({
 
   city: {
     type: String,
-    required: true,
+    // required: true,
   },
   nativePlace: {
     type: String,
-    required: true,
+    // required: true,
   },
   currentPlace: {
     type: String,
-    required: true,
+    // required: true,
   },
   occupation: {
     type: String,

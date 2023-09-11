@@ -4,6 +4,7 @@ import { HTTP_RESPONSE } from "../../helper/constants";
 import { responseObj } from "../../helper/response";
 import { INotification } from "../../interfaces/INotification";
 import Notification from "../../models/Notification";
+import { deleteNotificationAferAccept } from "../../helper/notify";
 
 export const addNotification = async (req: Request, res: Response) => {
   try {
@@ -64,9 +65,14 @@ export const addNotification = async (req: Request, res: Response) => {
 export const getNotifications = async (req: Request, res: Response) => {
   try {
     const { uid } = req.body.user;
-    const notifications = await Notification.find({
+    let notifications = await Notification.find({
       users_ids: { $elemMatch: { $eq: uid } },
     });
+
+    // notifications = notifications.filter(
+    //   (notification) => notification.uid != uid
+    // );
+
     return responseObj({
       statusCode: HTTP_RESPONSE.SUCCESS,
       type: "success",
@@ -201,3 +207,7 @@ export const deleteNotification = async (req: Request, res: Response) => {
     });
   }
 };
+
+// {
+//   users_ids: { $elemMatch: { $eq: "nFVzzbrbtLhL1ZLRza4zNwzkmNE3" } },
+// }

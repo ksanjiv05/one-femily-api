@@ -90,6 +90,46 @@ export const addRelation = async (req: Request, res: Response) => {
   }
 };
 
+export const declineRelation = async (req: Request, res: Response) => {
+  try {
+    const { uid } = req.body.user;
+    console.log("req.body", req.body);
+    const status = await deleteNotificationAferAccept(
+      req.body.relationUid,
+      uid
+    );
+    // console.log("req", req.body);
+    if (!status)
+      return responseObj({
+        statusCode: HTTP_RESPONSE.INTERNAL_SERVER_ERROR,
+        type: "error",
+        msg: "unable to process your request",
+        error: null,
+        resObj: res,
+        data: null,
+      });
+    // add push notification to notify user
+    return responseObj({
+      statusCode: HTTP_RESPONSE.SUCCESS,
+      type: "success",
+      msg: "hey, you are successfully declined",
+      error: null,
+      resObj: res,
+      data: null,
+    });
+  } catch (error) {
+    logging.error("Decline Relation", "unable to decline Relation", error);
+    return responseObj({
+      statusCode: HTTP_RESPONSE.INTERNAL_SERVER_ERROR,
+      type: "error",
+      msg: "unable to process your request",
+      error: null,
+      resObj: res,
+      data: null,
+    });
+  }
+};
+
 export const updateRelation = async (req: Request, res: Response) => {
   try {
     const { _id = "" } = req.body;

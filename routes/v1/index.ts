@@ -14,6 +14,7 @@ import {
 import { addPeople } from "../../controllers/peopleController/people";
 import {
   addRelation,
+  declineRelation,
   getRelations,
   getRelationsAll,
 } from "../../controllers/relationController/relation";
@@ -33,6 +34,8 @@ router.delete("/user", auth, deleteUser);
 
 router.post("/people", auth, addPeople);
 router.post("/relation", auth, addRelation);
+router.post("/relation/decline", auth, declineRelation);
+
 router.get("/relation", auth, getRelations);
 router.get("/relation/all", auth, getRelationsAll);
 

@@ -60,8 +60,10 @@ export const deleteNotificationAferAccept = async (muid, uid) => {
     // const notification = new Notification(data);
     // await notification.save();
     logging.info("Notification Update", " Notification  just updated: ");
+    return true;
   } catch (err) {
     console.log("notify error", err);
     logging.error("Notification Update", "Notification update error: ");
+    return false;
   }
 };

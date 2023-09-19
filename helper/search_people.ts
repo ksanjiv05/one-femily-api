@@ -1,3 +1,4 @@
+import People from "../models/People";
 import User from "../models/User";
 import { sendNotification } from "./fcm";
 import { notify, notifyUpdate } from "./notify";
@@ -55,6 +56,8 @@ export const searchPeople = async ({
   muid,
   fcmToken,
 }: searchPeopleType) => {
+  console.log("++++++++++++++++++++++++++++++++++++++++++");
+  console.log("uid ", uid);
   const usersF = await User.find({
     $or: [
       {
@@ -184,7 +187,10 @@ export const searchPeople = async ({
   console.log("usersF", usersF);
 
   const fcmTokens = usersF
-    .map((user) => user.fcmToken)
+    .map((user) => {
+      if (user.uid == uid) return;
+      return user.fcmToken;
+    })
     .filter((token) => token != fcmToken);
   sendNotification({
     title: "Do you know?",
@@ -220,6 +226,187 @@ export const searchPeople = async ({
 
   // return usersF;
 };
+
+// export const searchPeopleWhenPeopleAdd = async ({
+//   // people properties
+//   fatherName,
+//   motherName,
+//   nativePlace,
+//   bloodGroup,
+//   name,
+//   gender,
+//   occupation,
+//   email,
+//   pic,
+//   uid,
+//   muid,
+//   fcmToken,
+// }: searchPeopleType) => {
+//   const usersF = await User.find({
+//     $or: [
+//       {
+//         $and: [
+//           // {
+//           //   displayName: { $ne: name },
+//           // },
+//           {
+//             fatherName,
+//           },
+//           {
+//             motherName,
+//           },
+//           {
+//             gender,
+//           },
+//           {
+//             nativePlace,
+//           },
+//           {
+//             occupation,
+//           },
+//           {
+//             bloodGroup,
+//           },
+//         ],
+//       },
+//       {
+//         $and: [
+//           // {
+//           //   displayName: { $ne: name },
+//           // },
+//           {
+//             fatherName,
+//           },
+//           {
+//             motherName,
+//           },
+//           {
+//             gender,
+//           },
+//           {
+//             nativePlace,
+//           },
+//           {
+//             occupation,
+//           },
+//         ],
+//       },
+//       {
+//         $and: [
+//           // {
+//           //   displayName: { $ne: name },
+//           // },
+//           {
+//             fatherName,
+//           },
+//           {
+//             motherName,
+//           },
+//           {
+//             gender,
+//           },
+//           {
+//             nativePlace,
+//           },
+//         ],
+//       },
+//       {
+//         $and: [
+//           // {
+//           //   displayName: { $ne: name },
+//           // },
+//           {
+//             fatherName,
+//           },
+//           {
+//             motherName,
+//           },
+//           {
+//             gender,
+//           },
+//         ],
+//       },
+//       {
+//         $and: [
+//           // {
+//           //   displayName: { $ne: name },
+//           // },
+//           {
+//             fatherName,
+//           },
+//           {
+//             motherName,
+//           },
+//         ],
+//       },
+//       {
+//         $and: [
+//           // {
+//           //   displayName: { $ne: name },
+//           // },
+//           {
+//             fatherName,
+//           },
+//           {
+//             gender,
+//           },
+//         ],
+//       },
+//       {
+//         $and: [
+//           // {
+//           //   displayName: { $ne: name },
+//           // },
+//           {
+//             motherName,
+//           },
+//           {
+//             gender,
+//           },
+//         ],
+//       },
+//     ],
+//   });
+
+//   console.log("usersF", usersF);
+
+//   const fcmTokens = usersF
+//     .map((user) => user.fcmToken)
+//     .filter((token) => token != fcmToken);
+//   sendNotification({
+//     title: "Do you know?",
+//     message: "Name : " + name,
+//     tokens: fcmTokens,
+//     payload: {
+//       uid,
+//       pic: "https://picsum.photos/50",
+//     },
+//     icon: "",
+//   });
+//   const userIds = usersF.map((user) => user.uid).filter((uidn) => uidn != uid);
+
+//   notify({
+//     users_ids: userIds,
+//     name,
+//     fatherName,
+//     motherName,
+//     pic,
+//     uid,
+//     muid,
+//   });
+
+//   notifyUpdate({
+//     users_ids: userIds,
+//     name,
+//     fatherName,
+//     motherName,
+//     pic,
+//     uid,
+//     muid,
+//   });
+
+//   // return usersF;
+// };
 
 // const usersF = await User.find({
 //   $or: [

@@ -4,6 +4,7 @@ import { HTTP_RESPONSE } from "../../helper/constants";
 import { responseObj } from "../../helper/response";
 import { IPeople } from "../../interfaces/IPeople";
 import People from "../../models/People";
+import { searchPeople } from "../../helper/search_people";
 
 export const addPeople = async (req: Request, res: Response) => {
   try {
@@ -29,7 +30,7 @@ export const addPeople = async (req: Request, res: Response) => {
       name == "" ||
       fatherName == "" ||
       motherName == "" ||
-      phoneNumber == "" ||
+      // phoneNumber == "" ||
       dob == "" ||
       occupation == "" ||
       maritalStatus == "" ||
@@ -47,6 +48,9 @@ export const addPeople = async (req: Request, res: Response) => {
 
     const newPeople: IPeople = new People({ uid, ...req.body });
     await newPeople.save();
+
+    req.body.muid = newPeople._id;
+    searchPeople({ uid, ...req.body });
 
     // add push notification to notify user
     return responseObj({

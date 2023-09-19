@@ -12,7 +12,7 @@ const NotificationSchema: Schema = new Schema({
   name: { type: String, required: true },
   fatherName: { type: String, required: true },
   motherName: { type: String, required: true },
-  pic: { type: String, required: true },
+  pic: { type: String },
   uid: { type: String, required: true },
   muid: { type: String, required: true },
   users_ids: [String],

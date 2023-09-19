@@ -20,7 +20,7 @@ const PeopleSchema: Schema = new Schema({
   photoURL: String,
   phoneNumber: {
     type: String,
-    required: true,
+    // required: true,
   },
   state: String, //----
   lastName: String, //----

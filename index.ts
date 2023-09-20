@@ -70,14 +70,14 @@ const runTest = async () => {
   //   fatherName:"Balkrishna"
   // });
   // console.log("users ", pp);
-  await sendNotification({
-    title: "test title uyu",
-    message: "test messagehh state 3 ",
-    icon: "",
-    tokens: [
-      "e7jNhh7qQ4CcQ9AE6QZfr0:APA91bFPH7b3_Q1BlOBwBzBseR5NTylJoujVxa-F_1cq9a34ww-jbMqMdZXNkcyOtRcPbX3fJz0qZuCRla-lNBgaDRR_jlcxYlxLlB3-RTrSr7SLJo4e52KVCeyG2DprG0Q2wuufaBjV",
-    ],
-  });
+  // await sendNotification({
+  //   title: "test title uyu",
+  //   message: "test messagehh state 3 ",
+  //   icon: "",
+  //   tokens: [
+  //     "e7jNhh7qQ4CcQ9AE6QZfr0:APA91bFPH7b3_Q1BlOBwBzBseR5NTylJoujVxa-F_1cq9a34ww-jbMqMdZXNkcyOtRcPbX3fJz0qZuCRla-lNBgaDRR_jlcxYlxLlB3-RTrSr7SLJo4e52KVCeyG2DprG0Q2wuufaBjV",
+  //   ],
+  // });
   // searchPeople({
   //   name: "kishan",
   //   fatherName: "laxman",

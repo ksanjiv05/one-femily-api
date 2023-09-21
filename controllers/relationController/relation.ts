@@ -30,6 +30,8 @@ export const addRelation = async (req: Request, res: Response) => {
       profilePicture = "",
     }: IRelation = req.body;
 
+    console.log("req.body via ", req.body);
+
     const { uid } = req.body.user;
 
     if (!req.body.isViaRelation) {
@@ -222,7 +224,9 @@ export const getRelations = async (req: Request, res: Response) => {
       __v: 0,
     };
 
-    let relations: IRelation[] = await Relation.find({ uid });
+    let relations: IRelation[] = await Relation.find({ uid }).sort({
+      createdAt: 1,
+    });
     const temp = Object.create(null);
     const relationDataArr = [userObj, ...relations];
     // console.log("relations", JSON.stringify([userObj, ...relations]));
@@ -236,6 +240,7 @@ export const getRelations = async (req: Request, res: Response) => {
     //   (temp[parentId].children || (temp[parentId].children = [])).push(value);
     // });
 
+    // console.log("relationDataArr", JSON.stringify(relationDataArr));
     const relationsBuilder = await getTree(JSON.stringify(relationDataArr));
 
     // console.log("relationsBuilder", JSON.stringify(relationsBuilder));

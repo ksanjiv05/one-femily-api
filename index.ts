@@ -92,6 +92,11 @@ const runTest = async () => {
   //   bloodGroup: "A+",
   //   uid: "nFVzzbrbtLhL1ZLRza4zNwzkmNE3",
   // });
+
+  const tr = await getTree(
+    `[{"_id":"650b3663f3c60aea80a78a1d","uid":"wqcMDo4QEcZTnZDrLPdbvm2InrE2","parentId":null,"relationType":"","relationName":"jyoti","relationUid":"650b3663f3c60aea80a78a1d","createdAt":{"$date":"2023-09-20T18:13:55.777Z"},"__v":0},{"_id":"650c11b92b303a2b81e95db7","uid":"wqcMDo4QEcZTnZDrLPdbvm2InrE2","parentId":"650b31e1f3c60aea80a789fe","relationType":"Brother","relationName":"kishan","relationUid":"650b341df3c60aea80a78a0b","createdAt":"2023-09-21T09:49:45.375Z","__v":0},{"_id":"650b36baf3c60aea80a78a2b","uid":"wqcMDo4QEcZTnZDrLPdbvm2InrE2","parentId":"650b3663f3c60aea80a78a1d","relationType":"Brother","relationName":"sanjiv","relationUid":"650b31e1f3c60aea80a789fe","createdAt":"2023-09-20T18:15:22.523Z","__v":0}]`
+  );
+  console.log("tr ", tr);
 };
 
-runTest();
+// runTest();

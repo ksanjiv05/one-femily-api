@@ -12,7 +12,7 @@ import { searchPeople } from "../../helper/search_people";
 
 export const addUser = async (req: Request, res: Response) => {
   try {
-    req.body.photoURL = "http://localhost:3000/static/" + req.file?.filename;
+    req.body.photoURL = HOST + req.file?.filename;
     console.log("file ", req.body, req.file);
     const {
       displayName = "",
@@ -220,7 +220,7 @@ export const addUser = async (req: Request, res: Response) => {
 
 export const updateUser = async (req: Request, res: Response) => {
   try {
-    req.body.photoURL = "http://localhost:3000/static/" + req.file?.filename;
+    req.body.photoURL = HOST + req.file?.filename;
     console.log("req. body ", req.body);
     const { uid } = req.body;
     const {

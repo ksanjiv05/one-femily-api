@@ -27,13 +27,13 @@ export const addRelation = async (req: Request, res: Response) => {
       parentLevel = -1,
       relationType = "",
       relationName = "",
-      profilePicture = "",
+      photoURL = "",
     }: IRelation = req.body;
 
-    console.log("req.body via ", req.body);
-
     const { uid } = req.body.user;
-
+    if (photoURL == "") {
+      delete req.body.photoURL;
+    }
     if (!req.body.isViaRelation) {
       if (relationUid == "" || relationType == "" || relationName == "") {
         return responseObj({
@@ -67,7 +67,7 @@ export const addRelation = async (req: Request, res: Response) => {
 
     const newRelation: IRelation = new Relation({ uid, ...req.body });
     await newRelation.save();
-    // console.log("----------------------------------------");
+
     // console.log(req.body);
     deleteNotificationAferAccept(req.body.relationUid, uid);
     // add push notification to notify user
@@ -217,6 +217,7 @@ export const getRelations = async (req: Request, res: Response) => {
       parentId: null,
       relationType: "",
       relationName: user?.displayName,
+      photoURL: user?.photoURL,
       relationUid: user?._id,
       createdAt: {
         $date: user?.createdAt,

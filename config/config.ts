@@ -7,7 +7,8 @@ export const DB_URL: string =
 export const DB_URL_DEV: string = "127.0.0.1:27017";
 
 export const DB_NAME: string = "ELPSDB";
-export const HOST = "http://localhost:4000/api/v1/static/";
+export const HOST =
+  "https://fa91-2409-40e4-18-a487-3410-2c2d-7fd2-23e2.ngrok-free.app/static/images/";
 
 //Aahw7JvAc33qsdwz
 //kumarsanjiv0005
